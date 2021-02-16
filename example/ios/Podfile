@@ -1,7 +1,8 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '10.0'
+platform :ios, '13.0'
+
 
 # We ingore warning except for RNMBGL
 INHIBIT_WARNING_BY_DEFAULT = true
@@ -28,6 +29,9 @@ target 'RNMapboxGLExample' do
   # default version
   pod 'react-native-mapbox-gl', :path => '../../', :inhibit_warnings => false
 
+  #pod '@react-native-mapbox-gl-mapbox-mobile-events-static', path: '../../../react-native-mapbox-gl-static-pod/MapboxMobileEvents/@react-native-mapbox-gl-mapbox-mobile-events-static.podspec.json'
+  #pod '@react-native-mapbox-gl-mapbox-turf-static', path: '../../../react-native-mapbox-gl-static-pod/Turf/@react-native-mapbox-gl-mapbox-turf-static.podspec.json'
+
   target 'RNMapboxGLExampleTests' do
     inherit! :search_paths
     # Pods for testing
@@ -39,7 +43,9 @@ target 'RNMapboxGLExample' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  use_flipper!
+  # use_flipper!
+  use_flipper!({ 'Flipper-Folly' => '2.3.0' })
+
   post_install do |installer|
     flipper_post_install(installer)
   end
