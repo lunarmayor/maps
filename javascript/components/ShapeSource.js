@@ -55,6 +55,13 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
      * The default value is 50.
      */
     clusterRadius: PropTypes.number,
+     /**
+     * Specifies custom properties on the generated clusters if clustering is enabled,
+     * aggregating values from clustered points.
+     * Has the form `{ 'property_name': [operator, map_expression] }`.
+     */
+    clusterProperties: PropTypes.object,
+
 
     /**
      * Specifies the maximum zoom level at which to cluster points if clustering is enabled.
