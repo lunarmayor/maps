@@ -212,6 +212,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
       cluster: this.props.cluster ? 1 : 0,
       clusterRadius: this.props.clusterRadius,
       clusterMaxZoomLevel: this.props.clusterMaxZoomLevel,
+      clusterProperties: this.props.clusterProperties,
       maxZoomLevel: this.props.maxZoomLevel,
       buffer: this.props.buffer,
       tolerance: this.props.tolerance,
