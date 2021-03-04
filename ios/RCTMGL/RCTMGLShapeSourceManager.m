@@ -41,6 +41,35 @@ RCT_REMAP_VIEW_PROPERTY(onMapboxShapeSourcePress, onPress, RCTBubblingEventBlock
     return source;
 }
 
+
+RCT_EXPORT_METHOD(getLeaves: (nonnull NSNumber*)reactTag
+                  (NSNumber*)clusterId
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+      [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *manager, NSDictionary<NSNumber*, UIView*> *viewRegistry) {
+          RCTMGLShapeSource* shapeSource = viewRegistry[reactTag];
+
+          if (![shapeSource isKindOfClass:[RCTMGLShapeSource class]]) {
+              RCTLogError(@"Invalid react tag, could not find RCTMGLMapView");
+              return;
+          }
+
+          NSArray<id<MGLFeature>> *shapes = [shapeSource childrenOfCluster: clusterId];
+
+          NSMutableArray<NSDictionary*> *features = [[NSMutableArray alloc] initWithCapacity:shapes.count];
+          for (int i = 0; i < shapes.count; i++) {
+              [features addObject:shapes[i].geoJSONDictionary];
+          }
+
+          resolve(@{
+                    @"data": @{ @"type": @"FeatureCollection", @"features": features }
+                    });
+      }];
+
+
+}
+
 RCT_EXPORT_METHOD(features:(nonnull NSNumber*)reactTag
                   withFilter:(NSArray *)filter
                   resolver:(RCTPromiseResolveBlock)resolve
@@ -48,7 +77,7 @@ RCT_EXPORT_METHOD(features:(nonnull NSNumber*)reactTag
 {
     [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *manager, NSDictionary<NSNumber*, UIView*> *viewRegistry) {
         RCTMGLShapeSource* shapeSource = viewRegistry[reactTag];
-        
+
         if (![shapeSource isKindOfClass:[RCTMGLShapeSource class]]) {
             RCTLogError(@"Invalid react tag, could not find RCTMGLMapView");
             return;
@@ -56,12 +85,12 @@ RCT_EXPORT_METHOD(features:(nonnull NSNumber*)reactTag
 
         NSPredicate* predicate = [FilterParser parse:filter];
         NSArray<id<MGLFeature>> *shapes = [shapeSource featuresMatchingPredicate: predicate];
-        
+
         NSMutableArray<NSDictionary*> *features = [[NSMutableArray alloc] initWithCapacity:shapes.count];
         for (int i = 0; i < shapes.count; i++) {
             [features addObject:shapes[i].geoJSONDictionary];
         }
-        
+
         resolve(@{
                   @"data": @{ @"type": @"FeatureCollection", @"features": features }
                   });
